@@ -12,13 +12,20 @@ from pathlib import Path
 WORD = "Bossplainer"
 
 
+def validate(word: str) -> str:
+    """A gate-ready entry is one word: 1-30 characters, no spaces."""
+    word = word.strip()
+    if not word or len(word) > 30 or any(ch.isspace() for ch in word):
+        raise ValueError("entry must be a single word of 1-30 characters")
+    if not word.isalpha():
+        raise ValueError("entry must be letters only, no punctuation")
+    return word
+
+
 def main() -> None:
     out = Path("/output/entry.txt")
     out.parent.mkdir(parents=True, exist_ok=True)
-    word = WORD.strip()
-    if not word or " " in word or len(word) > 30:
-        raise ValueError("entry must be a single word of 1-30 characters")
-    out.write_text(word, encoding="utf-8")
+    out.write_text(validate(WORD), encoding="utf-8")
 
 
 if __name__ == "__main__":
